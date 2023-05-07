@@ -19,7 +19,7 @@ To install and run the KBot Telegram Bot, follow the instructions below:
    1. `read -s TELE_TOKEN # Enter your API Token`
    2. `export TELE_TOKEN`
 6. Run the binary.
-   1. `./kbot`
+   1. `./kbot start`
    2. Talk to your bot via Telegram.
 
 ## Usage
@@ -32,10 +32,11 @@ To use the KBot Telegram Bot, follow these steps:
 ## Use the available commands to interact with the bot
 
 Available Commands
-`/start` - Start the bot and display a welcome message.
-`/help` - Display the list of available commands.
-`/echo <message>` - Echo the provided message back to the user.
-`/ping` - Display a "pong" message to indicate that the bot is online.
+
+- `/start` - Start the bot and display a welcome message.
+  - `/start <message>` - Echo the provided message back to the user, if understand.
+  - `/start hello` - Display a "Hello World" message.
+  - `/start ping` - Display a "pong" message to indicate that the bot is online.
 
 ## Credits
 

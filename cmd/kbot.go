@@ -22,13 +22,11 @@ var (
 var kbotCmd = &cobra.Command{
 	Use:     "kbot",
 	Aliases: []string{"start"},
-	Short:   "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
+	Short:   "KBot is a bot for Telegram",
+	Long: `KBot is a fully functional bot for Telegram.
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+Created for fun and learning purposes. The main goal is to learn Go and Telegram Bot API.
+It's a work in progress, so expect some bugs and missing features.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Printf("kbot %s started\n", appVersion)
 		kbot, err := telebot.NewBot(telebot.Settings{
@@ -46,8 +44,14 @@ to quickly create a Cobra application.`,
 			payload := m.Message().Payload
 
 			switch payload {
-				case "hello":
-					err = m.Send((fmt.Sprintf("Hello! I'm kbot %s", appVersion)))
+			case "hello":
+				err = m.Send((fmt.Sprintf("Hello! I'm kbot %s", appVersion)))
+			case "help":
+				err = m.Send((fmt.Sprintf("I'm kbot %s, I can't help you yet", appVersion)))
+			case "ping":
+				err = m.Send(("pong"))
+			default:
+				err = m.Send(("Sorry, I don't understand"))
 
 			}
 
@@ -56,6 +60,8 @@ to quickly create a Cobra application.`,
 		kbot.Start()
 	},
 }
+
+
 
 func init() {
 	rootCmd.AddCommand(kbotCmd)
