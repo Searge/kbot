@@ -61,8 +61,6 @@ It's a work in progress, so expect some bugs and missing features.`,
 	},
 }
 
-
-
 func init() {
 	rootCmd.AddCommand(kbotCmd)
 
