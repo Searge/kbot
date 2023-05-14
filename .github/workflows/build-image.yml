@@ -1,0 +1,100 @@
+﻿# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
+name: Publish Docker image
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+    branches:
+      - test
+  # release:
+  #   types: [published]
+  workflow_dispatch:
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+  env_var: ${{ vars.ENV_CONTEXT_VAR }}
+
+jobs:
+  display-variables:
+    name: ${{ vars.JOB_NAME }}
+    # You can use configuration variables with the `vars` context for dynamic jobs
+    if: ${{ vars.USE_VARIABLES == 'true' }}
+    runs-on: ${{ vars.RUNNER }}
+    environment: ${{ vars.ENVIRONMENT_STAGE }}
+    steps:
+    - name: Use variables
+      run: |
+        echo "repository variable : $REPOSITORY_VAR"
+        echo "organization variable : $ORGANIZATION_VAR"
+        echo "overridden variable : $OVERRIDE_VAR"
+        echo "variable from shell environment : $env_var"
+      env:
+        REPOSITORY_VAR: ${{ vars.REPOSITORY_VAR }}
+        ORGANIZATION_VAR: ${{ vars.ORGANIZATION_VAR }}
+        OVERRIDE_VAR: ${{ vars.OVERRIDE_VAR }}
+
+    - name: ${{ vars.HELLO_WORLD_STEP }}
+      if: ${{ vars.HELLO_WORLD_ENABLED == 'true' }}
+      uses: actions/hello-world-javascript-action@main
+      with:
+        who-to-greet: ${{ vars.GREET_NAME }}
+
+  build-and-push-image:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+
+      # - name: Set up QEMU
+      #   uses: docker/setup-qemu-action@v1
+
+      # - name: Set up Docker Buildx
+      #   uses: docker/setup-buildx-action@v1
+      #   id: buildx
+      #   with:
+      #     install: true
+
+      # - name: Inspect builder
+      #   run: |
+      #     echo "Name:      ${{ steps.buildx.outputs.name }}"
+      #     echo "Endpoint:  ${{ steps.buildx.outputs.endpoint }}"
+      #     echo "Status:    ${{ steps.buildx.outputs.status }}"
+      #     echo "Flags:     ${{ steps.buildx.outputs.flags }}"
+      #     echo "Platforms: ${{ steps.buildx.outputs.platforms }}"
+      #     echo "tags:      ${{ steps.meta.outputs.tags }}"
+      #     echo "labels:    ${{ steps.meta.outputs.labels }}"
+
+      # - name: Build and push Docker image
+      #   uses: docker/build-push-action@v2
+      #   with:
+      #     context: ./docker
+      #     platforms: linux/amd64,linux/arm64,darwin/amd64,darwin/arm64,windows/amd64
+      #     push: true
+      #     tags: ${{ steps.meta.outputs.tags }}
+      #     labels: ${{ steps.meta.outputs.labels }}
+
+      # - name: Image digest
+      #   run: echo ${{ steps.docker_build.outputs.digest }}
