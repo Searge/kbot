@@ -14,7 +14,7 @@ jobs:
   golangci:
     strategy:
       matrix:
-        go: [1.17]
+        go: [1.20]
         os: [macos-latest, windows-latest]
     name: lint
     runs-on: ${{ matrix.os }}
@@ -30,10 +30,10 @@ jobs:
           # Required: the version of golangci-lint is required and must be specified without patch version: we always use the latest patch version.
           version: v1.29
           # Optional: working directory, useful for monorepos
-          # working-directory: somedir
+          working-directory: cmd
 
           # Optional: golangci-lint command line arguments.
           # args: --issues-exit-code=0
 
           # Optional: show only new issues if it's a pull request. The default value is `false`.
-          # only-new-issues: true
+          only-new-issues: true

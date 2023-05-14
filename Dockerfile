@@ -1,4 +1,6 @@
-FROM golang:1.19 as builder
+FROM quay.io/projectquay/golang:1.20 as builder
+
+LABEL maintainer "Serhii Boremchuk <elfimqsvg@mozmail.com>"
 
 WORKDIR /go/src/app
 COPY . .
