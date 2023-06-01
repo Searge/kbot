@@ -2,6 +2,10 @@ FROM quay.io/projectquay/golang:1.20 as builder
 
 LABEL maintainer "Serhii Boremchuk <elfimqsvg@mozmail.com>"
 
+ARG CGO_ENABLED
+ARG TARGET_OS
+ARG TARGET_ARCH
+
 WORKDIR /go/src/app
 COPY . .
 

@@ -54,7 +54,15 @@ clean:
 	docker rmi -f ${REGISTRY}/${APP}:${VERSION}-${TARGET_ARCH}
 
 # Build the binary and docker image
-all: format install build docker-build docker-push
+all: format install build
+
+linux: all
+
+macos:
+	make all CGO_ENABLED=0 GOOS=darwin GOARCH=arm64
+
+windows:
+	make all CGO_ENABLED=1 GOOS=windows GOARCH=amd64
 
 # Builds the project for all target OSes and architectures
 build-all:

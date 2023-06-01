@@ -84,7 +84,17 @@ For build docker image for custom platform and push use:
 
 ```bash
 # Example for windows/amd64
-make all CGO_ENABLED=1 TARGET_OS=windows TARGET_ARCH=amd64
+make all CGO_ENABLED=1 TARGET_OS=windows TARGET_ARCH=amd64 &&
+  make docker-build CGO_ENABLED=1 TARGET_OS=windows TARGET_ARCH=amd64 &&
+  make docker-push CGO_ENABLED=1 TARGET_OS=windows TARGET_ARCH=amd64
+```
+
+OR use `make platform`:
+
+```bash
+make linux
+make windows
+make macos
 ```
 
 For build everything use:
