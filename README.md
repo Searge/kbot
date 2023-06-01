@@ -40,6 +40,59 @@ Available Commands
   - `/start hello` - Display a "Hello World" message.
   - `/start ping` - Display a "pong" message to indicate that the bot is online.
 
+## Make docker image
+
+Before you start, please make sure that you have created GitHub Personal Access Token with `read:packages` scope.
+
+To do this:
+
+1. Go to the [GitHub Personal Access Token](https://github.com/settings/tokens) page.
+2. Click the `Generate new token (classic)` button.
+3. Grant the `read:packages` scope.
+
+[About Container registry](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry#about-the-container-registry).
+
+Then login to GitHub Packages Docker Registry:
+
+```bash
+❯ docker login ghcr.io
+Username: searge
+Password:
+```
+
+Then build and push docker image.
+
+<!-- markdownlint-disable MD033 -->
+<mark>:warning: Default platform is linux/amd64</mark>
+<!-- markdownlint-enable MD033 -->
+
+For install golang dependencies and build binary use:
+
+```bash
+make install && make build
+```
+
+Then build and push docker image:
+
+```bash
+make docker-build && make docker-push
+```
+
+### Custom platform
+
+For build docker image for custom platform and push use:
+
+```bash
+# Example for windows/amd64
+make all CGO_ENABLED=1 TARGET_OS=windows TARGET_ARCH=amd64
+```
+
+For build everything use:
+
+```bash
+make everything
+```
+
 ## Credits
 
 The KBot Telegram Bot was developed by @Searge for educational purposes in learning Golang and the Telegram Bot API.
