@@ -1,5 +1,3 @@
-include docker/docker.mk
-
 # Build directory
 BUILD_DIR=build
 # Registry to push the image to
@@ -56,7 +54,7 @@ clean:
 	docker rmi -f ${REGISTRY}/${APP}:${VERSION}-${TARGET_ARCH}
 
 # Build the binary and docker image
-all: format lint test install build docker-build docker-push
+all: format install build docker-build docker-push
 
 # Builds the project for all target OSes and architectures
 build-all:
@@ -76,9 +74,9 @@ docker-build-all:
 	@for os in $(TARGET_OS_LIST); do \
 		for arch in $(TARGET_ARCH_LIST); do \
 			if [ "$$os" = "windows" ]; then \
-				make image TARGET_OS=$$os TARGET_ARCH=$$arch CGO_ENABLED=1; \
+				make docker-build TARGET_OS=$$os TARGET_ARCH=$$arch CGO_ENABLED=1; \
 			else \
-				make image TARGET_OS=$$os TARGET_ARCH=$$arch; \
+				make docker-build TARGET_OS=$$os TARGET_ARCH=$$arch; \
 			fi; \
 		done \
 	done
@@ -99,7 +97,11 @@ clean-all:
 	done
 
 # Make everything:
-everything: format lint test install build-all docker-build-all docker-push-all
+everything: format install build-all docker-build-all docker-push-all
+
+# Make tag:
+make tag
+	bash scripts/bump
 
 # List all targets
 # (c) https://stackoverflow.com/a/26339924
@@ -107,4 +109,4 @@ list:
 	@LC_ALL=C $(MAKE) -pRrq -f $(firstword $(MAKEFILE_LIST)) : 2>/dev/null |
 	awk -v RS= -F: '/(^|\n)# Files(\n|$$)/,/(^|\n)# Finished Make data base/ {if ($$1 !~ "^[#.]") {print $$1}}' | sort | egrep -v -e '^[^[:alnum:]]' -e '^$@$$'
 
-.PHONY: format lint test install build clean docker-build docker-push docker-build-all clean-all docker-push-all list
+.PHONY: format lint test install build clean docker-build docker-push docker-build-all clean-all docker-push-all list all everything

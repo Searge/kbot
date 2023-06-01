@@ -1,0 +1,23 @@
+Version 0.1.0
+ - :construction_worker: Build Docker image with multi-platform support
+ - :pencil2: (docker): Fix cert issue
+ - Disable working dir
+ - :test_tube: Get environments
+ - 🎉 Add GitHub Actions workflow for building Docker images
+ - :arrow_up: Update Go version to 1.20 and add maintainer label
+ - :memo: (docs): Fix typo
+ - :memo: (docs): Add Golang Ci Lint badge
+ - :building_construction: (conf): Crate make & docker files
+ - :see_no_evil: (files): Remove binary from git
+ - :construction_worker: (ci): Add golangci-lint action
+ - :wrench: (codespace): Add config for Github Codespace
+ - :fire: Remove redundant comments
+ - :recycle: Refactor code and update available commands
+ - :art: (docs) Refactor README.md file
+ - :see_no_evil: Create go specific .gitignore
+ - :sparkles: (bot): Create the kbot
+ - :heavy_plus_sign: (deps): Add cobra and telebot
+ - :page_facing_up: BSD 3-Clause License
+ - :tada: (cobra): Initial commit
+ - first commit
+
