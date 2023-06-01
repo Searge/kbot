@@ -54,9 +54,9 @@ clean:
 	docker rmi -f ${REGISTRY}/${APP}:${VERSION}-${TARGET_ARCH}
 
 # Build the binary and docker image
-all: build docker-build
+all: install build docker-build
 
-image: all
+image: docker-build
 
 linux: all
 
