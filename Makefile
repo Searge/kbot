@@ -100,7 +100,7 @@ clean-all:
 everything: format install build-all docker-build-all docker-push-all
 
 # Make tag:
-make tag
+make tag:
 	bash scripts/bump
 
 # List all targets
