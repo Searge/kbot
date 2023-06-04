@@ -16,6 +16,12 @@ variable "GOOGLE_ZONE" {
   description = "GCP Zone"
 }
 
+variable "INIT_NODES" {
+  type        = number
+  default     = 1
+  description = "Number of initial nodes in the GKE cluster"
+}
+
 variable "GKE_MACHINE_TYPE" {
   type        = string
   default     = "g1-small"

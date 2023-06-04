@@ -3,7 +3,7 @@ resource "google_container_cluster" "demo" {
   location = var.GOOGLE_ZONE
 
   remove_default_node_pool = true
-  initial_node_count       = 3
+  initial_node_count       = var.INIT_NODES
 
 }
 
