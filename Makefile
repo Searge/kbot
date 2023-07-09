@@ -1,7 +1,7 @@
 # Build directory
 BUILD_DIR=build
 # Registry to push the image to
-REGISTRY=ghcr.io/searge
+REGISTRY ?= ghcr.io/searge
 # Versioning
 FLAG=github.com/Searge/kbot/cmd.appVersion
 APP=$(shell basename $(shell git remote get-url origin) | sed 's/\.git//')
@@ -21,11 +21,11 @@ format:
 
 # Lint the code
 lint:
-	golint ./cmd
+	@golint ./cmd
 
 # Run tests
 test:
-	go test -v ./cmd
+	@go test -v -cover ./cmd
 
 # Install dependencies
 install:

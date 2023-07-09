@@ -3,16 +3,16 @@
 # separate terms of service, privacy policy, and support
 # documentation.
 
-name: Publish Docker image
+name: build-n-push
 
 on:
-  push:
-    tags:
-      - "v*.*.*"
-    branches:
-      - test
-  # release:
-  #   types: [published]
+  # push:
+  #   tags:
+  #     - "v*.*.*"
+  #   branches:
+  #     - test
+  release:
+    types: [published]
   workflow_dispatch:
 
 env:
@@ -21,7 +21,8 @@ env:
   DOCKER_BUILDX_PLATFORMS: linux/amd64,linux/arm64,darwin/amd64,darwin/arm64,windows/amd64
 
 jobs:
-  build-and-push-image:
+  ci:
+    name: CI
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -30,49 +31,57 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
+      # https://github.com/marketplace/actions/docker-login
       - name: Log in to the Container registry
-        uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
+        uses: docker/login-action@v2
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Extract metadata (tags, labels) for Docker
-        id: meta
-        uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
-        with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v1
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
-        id: buildx
-        with:
-          install: true
-
-      - name: Inspect builder
+      # Make tests
+      - name: Run tests
         run: |
-          echo "Name:      ${{ steps.buildx.outputs.name }}"
-          echo "Endpoint:  ${{ steps.buildx.outputs.endpoint }}"
-          echo "Status:    ${{ steps.buildx.outputs.status }}"
-          echo "Flags:     ${{ steps.buildx.outputs.flags }}"
-          echo "Platforms: ${{ steps.buildx.outputs.platforms }}"
-          echo "tags:      ${{ steps.meta.outputs.tags }}"
-          echo "labels:    ${{ steps.meta.outputs.labels }}"
-          echo "registry:  ${{ env.REGISTRY }}"
-          echo "platforms: ${{ env.DOCKER_BUILDX_PLATFORMS }}"
+          echo "Run tests"
+          make test
 
-      # - name: Build and push Docker image
-      #   uses: docker/build-push-action@v2
-      #   with:
-      #     context: ./docker
-      #     platforms: ${{ env.DOCKER_BUILDX_PLATFORMS }}
-      #     push: true
-      #     tags: ${{ steps.meta.outputs.tags }}
-      #     labels: ${{ steps.meta.outputs.labels }}
+      # Build and push Docker image
+      - name: Build and push
+        env:
+          APP: "kbot"
+          REGISTRY: ${{ env.REGISTRY }}
+        run: |
+          echo "Build and push"
+          make docker-build
+          make docker-push
 
-      - name: Image digest
-        run: echo ${{ steps.docker_build.outputs.digest }}
+  cd:
+    name: CD
+    needs: ci
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Set the version
+        run: |
+          echo "Checkout repository"
+          echo "VERSION=$(git describe --tags --abbrev=0)-$(git rev-parse --short HEAD)" \
+          >> $GITHUB_ENV
+
+      - name: Update Helm chart
+        uses: mikefarah/yq@master
+        with:
+          cmd: yq -i '.image.tag=strenv(VERSION)' helm/values.yaml
+
+      - name: Backmerge to main
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git commit -am "update version $VERSION"
+          git push origin HEAD:main
