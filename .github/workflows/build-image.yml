@@ -52,7 +52,7 @@ jobs:
       - name: Build and push
         env:
           APP: "kbot"
-          REGISTRY: ${{ env.REGISTRY }}
+          REGISTRY: ${{ env.REGISTRY }}/${{ github.actor }}
         run: |
           echo "Build the image"
           make docker-build && sleep 5 &&
@@ -80,9 +80,9 @@ jobs:
         with:
           cmd: yq -i '.image.tag=strenv(VERSION)' helm/values.yaml
 
-      - name: Backmerge to main
+      - name: Backmerge
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
           git commit -am "update version $VERSION"
-          git push origin HEAD:main
+          git push
