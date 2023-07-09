@@ -2,7 +2,7 @@
 
 KBot Telegram Bot is a functional Telegram bot with a root command and settings. It is written in Golang and utilizes the github.com/spf13/cobra and gopkg.in/telebot.v3 frameworks.
 
-[![golangci-lint](https://github.com/Searge/kbot/actions/workflows/golangci-lint.yml/badge.svg)](https://github.com/Searge/kbot/actions/workflows/golangci-lint.yml)
+[![golangci-lint](https://github.com/Searge/kbot/actions/workflows/golangci-lint.yml/badge.svg)](https://github.com/Searge/kbot/actions/workflows/golangci-lint.yml) [![build-n-push](https://github.com/Searge/kbot/actions/workflows/build-image.yml/badge.svg)](https://github.com/Searge/kbot/actions/workflows/build-image.yml)
 
 ## [Documentation](docs/readme.md#documentation)
 
