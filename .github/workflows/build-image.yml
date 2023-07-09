@@ -16,7 +16,7 @@ on:
   workflow_dispatch:
 
 env:
-  REGISTRY: ghcr.io
+  REGISTRY: ghcr.io/searge
   IMAGE_NAME: ${{ github.repository }}
   DOCKER_BUILDX_PLATFORMS: linux/amd64,linux/arm64,darwin/amd64,darwin/arm64,windows/amd64
 
@@ -54,8 +54,9 @@ jobs:
           APP: "kbot"
           REGISTRY: ${{ env.REGISTRY }}
         run: |
-          echo "Build and push"
-          make docker-build
+          echo "Build the image"
+          make docker-build && sleep 5 &&
+          echo "Push the image"
           make docker-push
 
   cd:
