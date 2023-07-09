@@ -34,7 +34,7 @@ pipeline {
                 script {
                     docker.withRegistry('', 'dockerhub') {
                         echo 'Pushing docker image...'
-                        sh 'docker-push'
+                        sh 'make docker-push'
                     }
                 }
             }
