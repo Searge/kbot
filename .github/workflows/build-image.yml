@@ -8,6 +8,7 @@ name: build-n-push
 on:
   push:
     branches:
+      - develop
   release:
     types: [published]
   workflow_dispatch:
