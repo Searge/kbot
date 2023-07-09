@@ -41,7 +41,7 @@ spec:
           volumeMounts:
             - mountPath: /dev/mem
               name: dev-mem
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          image: "{{ .Values.image.repository }}/{{ .Chart.Name }}:{{ .Values.image.tag | default .Chart.AppVersion }}-{{ .Values.image.os }}-{{ .Values.image.arch }}"
           env:
             - name: {{ .Values.secret.tokenName }}
               valueFrom:

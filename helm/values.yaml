@@ -7,6 +7,8 @@ replicaCount: 1
 image:
   repository: searge
   tag: "v0.1.0-94eff8c"
+  os: linux
+  arch: amd64
 
 secret:
   name: kbot
